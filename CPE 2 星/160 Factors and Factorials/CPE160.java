@@ -9,11 +9,12 @@ public class CPE160 {
         // 先把100內的質數儲存
         int[] prime = new int[]{
             2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,
-            71,73,79,83,89,91,97
+            71,73,79,83,89,97
         };
         while ( (n = sc.nextInt()) != 0 ){
             Vector<Integer> result = new Vector<Integer>();
-            for(int i = 0 ; prime[i] <= n ; i++){
+            for(int i = 0 ; i < prime.length ; i++){
+                if(prime[i] > n)break;
                 int temp = n ;
                 int sum = 0;
 
