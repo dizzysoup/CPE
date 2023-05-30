@@ -1,29 +1,34 @@
 import java.util.* ;
 
-import javax.print.DocFlavor.STRING;
-
-
 public class CPE512 {
+    static int count = 0 ;
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         int index = 0 ;
+        
         while(sc.hasNextInt()){
-            index ++ ;
+            count = 0 ;
             int r = sc.nextInt();
             int c = sc.nextInt();
             if(r==0 && c==0)break ;
-            Vector<Vector<String>> vec = new Vector<Vector<String>>();
+            else if(index >0) System.out.println();
+            index ++ ;
+            Vector<Vector<Integer>> vec = new Vector<Vector<Integer>>();
+            Vector<Vector<Integer>> vec2 = new Vector<Vector<Integer>>();
             
             for(int i=1;i <= r ; i++){
-                Vector<String> vecr = new Vector<String>();
+                Vector<Integer> vecr1 = new Vector<Integer>();
+                Vector<Integer> vecr2 = new Vector<Integer>();
                 for(int j = 1; j <= c ; j++){
-                    vecr.add(i+"-" + j);
+                    vecr1.add(count);
+                    vecr2.add(count);
+                    count++;
                 }
-                vec.add(vecr);
+                vec.add(vecr1);
+                vec2.add(vecr2);
             }
-
            
-
+           
             int op = sc.nextInt();
             
             while(op-- > 0){
@@ -45,6 +50,7 @@ public class CPE512 {
                         EX(sc,vec);
                         break;
                 }
+                
             }
             
             int query = sc.nextInt();
@@ -52,13 +58,17 @@ public class CPE512 {
             while(query -- > 0){
                 int r1 = sc.nextInt();
                 int c1 = sc.nextInt();
+               
+                    
+                int val = vec2.get(r1-1).get(c1-1);
+
                 int r2 = 0;
                 int c2 = 0;
-                String str = r1 + "-" + c1 ;
+                
                 Boolean chk = false ;
                 for(int i = 0; i < vec.size();i++){
                     for(int j=0;j<vec.get(i).size();j++){
-                        if(vec.get(i).get(j).equals(str)){
+                        if(vec.get(i).get(j) == val ){
                             r2 = i+1;
                             c2 = j+1;
                             chk = true;
@@ -69,7 +79,7 @@ public class CPE512 {
                 }
                 String result = "Cell data in (" + r1 + "," + c1 + ")" ; 
                 if(chk)
-                    result += " move to (" + r2 + "," + c2 + ")";
+                    result += " moved to (" + r2 + "," + c2 + ")";
                 else 
                     result += " GONE";
                 output.add(result);
@@ -79,45 +89,50 @@ public class CPE512 {
             for(String str : output)
                 System.out.println(str);
             
+            
         }
 
         sc.close();
     }
 
   
-    public static void DR(Scanner sc , Vector<Vector<String>> vec){
+    public static void DR(Scanner sc , Vector<Vector<Integer>> vec){
         int A = sc.nextInt();
-        while(A-- > 0){
-            int num = sc.nextInt();
-            for(int i=0;i<vec.size();i++){
-                String[] vect = vec.get(i).get(0).split("-");
-                if(Integer.parseInt(vect[0]) == num){
-                    vec.remove(i);
-                }
-            }
-        }   
-    }
-
-    public static void DC(Scanner sc , Vector<Vector<String>> vec){
-        int A = sc.nextInt();
-        while(A-- > 0){
-            int num = sc.nextInt();
-            for(int i=0;i<vec.get(0).size();i++){
-                String[] vect = vec.get(0).get(i).split("-");
-                if(Integer.parseInt(vect[1]) == num){
-                    for(int j=0;j<vec.size();j++)
-                        vec.get(j).remove(i);
+        int[] delro = new int[A];
+        for(int i=0;i<delro.length;i++)
+            delro[i] = vec.get(sc.nextInt()-1).get(0);
+        for(int i=0;i<delro.length;i++){
+            for(int j=0;j<vec.size();j++){
+                if(vec.get(j).get(0) == delro[i]){
+                    vec.remove(j);
                     break;
                 }
+                
+            }
+        }  
+    }
 
+    public static void DC(Scanner sc , Vector<Vector<Integer>> vec){
+        int A = sc.nextInt();
+        int[] delcol = new int[A];
+        for(int i=0;i < delcol.length ; i++)
+            delcol[i] = vec.get(0).get(sc.nextInt() - 1 );
+        for(int i=0;i<delcol.length;i++){
+            for(int j = 0;j<vec.get(0).size();j++){
+                if(vec.get(0).get(j) == delcol[i]){
+                    for(int k=0;k<vec.size();k++){
+                        vec.get(k).remove(vec.get(k).get(j));
+                    }  
+                    break;
+                }
             }
         }
     }
 
-    public static void IC(Scanner sc , Vector<Vector<String>> vec){
+    public static void IC(Scanner sc , Vector<Vector<Integer>> vec){
         int A = sc.nextInt();
-        String[] targetcol = new String[A];
-        //先記錄原本的數值
+        int[] targetcol = new int[A];
+
         for(int i =0;i< targetcol.length;i++){
             int num = sc.nextInt();
             targetcol[i] = vec.get(0).get(num-1);
@@ -126,7 +141,8 @@ public class CPE512 {
             for(int j=0;j<vec.get(0).size();j++){
                 if(vec.get(0).get(j) == targetcol[i]){
                     for(int k=0;k<vec.size();k++){
-                        vec.get(k).add(j,"0-0");
+                        vec.get(k).add(j,count);
+                        count++;
                     }
                     break;
                 }
@@ -134,13 +150,12 @@ public class CPE512 {
         }
     }
 
-    public static void IR(Scanner sc , Vector<Vector<String>> vec){
+    public static void IR(Scanner sc , Vector<Vector<Integer>> vec){
         int A = sc.nextInt();
-        String[] targetrow = new String[A];
-        Vector<String> vect = new Vector<String>();
-        for(int i = 0 ; i < vec.get(0).size();i++)
-            vect.add("0-0");
-        //先記錄原本數值
+        int[] targetrow = new int[A];
+        
+        
+
         for(int i=0;i<targetrow.length;i++){
             int num = sc.nextInt();
             targetrow[i] = vec.get(num-1).get(0);
@@ -149,6 +164,11 @@ public class CPE512 {
         for(int i =0;i < targetrow.length;i++){
             for(int j = 0 ; j < vec.size();j++){
                 if(vec.get(j).get(0).equals(targetrow[i])){
+                    Vector<Integer> vect = new Vector<Integer>();
+                    for(int k=0;k<vec.get(0).size();k++){
+                        vect.add(count);
+                        count++;
+                    }   
                     vec.add(j,vect);
                     break;
                 }
@@ -156,14 +176,14 @@ public class CPE512 {
         }
     }
 
-    public static void EX(Scanner sc , Vector<Vector<String>> vec){
+    public static void EX(Scanner sc , Vector<Vector<Integer>> vec){
         int r1 = sc.nextInt()-1;
         int c1 = sc.nextInt()-1;
         int r2 = sc.nextInt()-1;
         int c2 = sc.nextInt()-1;
 
-        String str1 = vec.get(r1).get(c1);
-        String str2 = vec.get(r2).get(c2);
+        int str1 = vec.get(r1).get(c1);
+        int str2 = vec.get(r2).get(c2);
         vec.get(r1).set(c1,str2);
         vec.get(r2).set(c2,str1);
     }
