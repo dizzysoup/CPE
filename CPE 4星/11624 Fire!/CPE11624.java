@@ -45,7 +45,8 @@ public class CPE11624 {
                 
                 a++;
             }
-            FIRECALC(FIRE, firearr);           
+            FIRECALC(FIRE, firearr);     
+            
             JOECALC(JOE, joearr,firearr);
             OUTPUT(joearr);
         }
@@ -138,7 +139,7 @@ public class CPE11624 {
                 }
             }
 
-            if(pos.y - 1 > 0 && joearr[pos.x][pos.y-1] == -1){
+            if(pos.y - 1 >= 0 && joearr[pos.x][pos.y-1] == -1){
                 if(firearr[pos.x][pos.y-1] <= pos.val + 1 )
                     joearr[pos.x][pos.y-1] = -3;
                 else {
@@ -182,3 +183,4 @@ class POS {
     int y ;
     int val ;
 }
+

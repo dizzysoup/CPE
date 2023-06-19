@@ -33,6 +33,7 @@ public class CPE1366 {
                     }
                     y[i][j] = ysum ;
                     b[i][j] = bsum ; 
+                    
                 }
             }
 
