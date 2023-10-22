@@ -13,7 +13,7 @@ public class uva10235{
     			break ; 
     		}
     	}
-    	
+    	// prime 質數
     	if(flag) out.printf("%d is not prime.\r\n",n);
     	else{
     		String num = n+"";
